@@ -1,12 +1,13 @@
-import { Injectable } from "@nestjs/common";
+import {CACHE_MANAGER, Inject, Injectable } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { UserService } from "src/user/user.service";
 import * as bcrypt from 'bcrypt';
+import { Cache } from "cache-manager";
 
 @Injectable()
 export class AuthService{
 
-    constructor(private readonly userService : UserService ,private readonly jwtService : JwtService){}
+    constructor(@Inject(CACHE_MANAGER) private cacheManager: Cache,private readonly userService : UserService ,private readonly jwtService : JwtService){}
 
     async validateUser (email : string , password : string): Promise<any>{
            const findUser = await this.userService.findByEmail(email);
@@ -23,7 +24,12 @@ export class AuthService{
     }
 
     async login(user : any){
-         const payload = {username : user.email , sub : user._id};
+         const payload = {username : user.username , sub : user._id};
+         const jwtToken = this.jwtService.sign(payload);
+         console.log(jwtToken);
+         await this.cacheManager.set(jwtToken , true , 10000);
+         const test = await this.cacheManager.get(jwtToken);
+         console.log(test);
          return {
             'access_token': this.jwtService.sign(payload)
          };

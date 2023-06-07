@@ -13,15 +13,17 @@ export class UserService{
 
    async createUser(name : string , email : string , password : string){
     const pass:string  = await bcrypt.hash(password,this.salt);
+    console.log(pass);
         const newUser = new this.UserModule({
            name,
            email,
-           pass
+           password : pass
         })
         const existUser = await this.UserModule.findOne({'email':email})
         if(existUser){
             throw new BadRequestException("user already exist to the system");
         }
+        console.log(newUser);
         const response = await newUser.save();
         if(response){
             return response.id;

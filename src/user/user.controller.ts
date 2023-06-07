@@ -1,5 +1,6 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from "@nestjs/common";
 import { UserService } from "./user.service";
+import { CustomGurd } from "src/auth/auth.gurd";
 
 @Controller("user")
 export class UserController{
@@ -16,6 +17,7 @@ export class UserController{
        return this.userService.updateUser(id , name, email, password);
     }
 
+    @UseGuards(CustomGurd)
     @Get()
     async getUsers(){
       return this.userService.getUsers();
