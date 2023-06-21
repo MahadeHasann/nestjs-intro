@@ -1,4 +1,4 @@
-import {CACHE_MANAGER, Inject, Injectable } from "@nestjs/common";
+import {CACHE_MANAGER, ExecutionContext, Inject, Injectable } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { UserService } from "src/user/user.service";
 import * as bcrypt from 'bcrypt';
@@ -26,8 +26,8 @@ export class AuthService{
     async login(user : any){
          const payload = {username : user.username , sub : user._id};
          const jwtToken = this.jwtService.sign(payload);
-         console.log(jwtToken);
-         await this.cacheManager.set(jwtToken , true , 10000);
+         //console.log(jwtToken);
+         await this.cacheManager.set(jwtToken , true , 60);
          const test = await this.cacheManager.get(jwtToken);
          console.log(test);
          return {

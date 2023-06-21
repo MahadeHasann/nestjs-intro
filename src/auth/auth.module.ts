@@ -8,20 +8,20 @@ import { UserService } from "src/user/user.service";
 import { AuthController } from "./auth.controller";
 import { AuthService } from "./auth.service";
 import { LocalStreatigy } from "./local.auth";
-import {CacheModule} from "@nestjs/common";
 import * as redisStore from 'cache-manager-redis-store';
-
+import { CacheModule } from "@nestjs/cache-manager";
 
 @Module({
     imports : [CacheModule.register(
         { 
-            store: redisStore, 
-            host: 'localhost', //default host
-            port: 6379 //default port
+            store : redisStore, 
+            // host: 'localhost'
+            // port: 6000,
+            isGlobal : true
         }
     ),UserServiceModule , PassportModule , JwtModule.register({
         secret : 'secret',
-        signOptions : {expiresIn : '300s' },
+        signOptions : {expiresIn : '604800s' },
     }),MongooseModule.forFeature([{name :'User' , schema : UserSchema}])],
     controllers : [AuthController],
     providers : [AuthService , LocalStreatigy , UserService]

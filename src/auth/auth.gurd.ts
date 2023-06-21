@@ -26,11 +26,11 @@ export class CustomGurd implements CanActivate{
           } catch {
             throw new UnauthorizedException();
           }
-          console.log(token);
+          // console.log(token);
           const outputCacheToken = await this.cacheManager.get(token);
-          console.log(outputCacheToken);
+          // console.log(outputCacheToken);
           if(outputCacheToken){
-            await this.cacheManager.set(token , true , 10000);
+            await this.cacheManager.set(token , true , 60);
           }else{
             throw new UnauthorizedException("Sorry the token is not in the cache");
           }

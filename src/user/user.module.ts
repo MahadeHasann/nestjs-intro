@@ -9,7 +9,7 @@ import { UserSchema } from "./user.model";
 import { UserService } from "./user.service";
 
 @Module({
-  imports : [CacheModule.register(),MongooseModule.forFeature([{name : 'User' , schema : UserSchema}])],
+  imports : [MongooseModule.forFeature([{name : 'User' , schema : UserSchema}])],
   controllers: [UserController],
   providers: [UserService,JwtService],
 })
